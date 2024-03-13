@@ -1,10 +1,17 @@
 {
-  "name": "cybersource-rest-client",
+  "name": "@OEN-Tech/cybersource-rest-client",
   "version": "0.0.54",
-  "description": "Node.js SDK for the CyberSource REST API",
-  "author": "developer@cybersource.com",
+  "description": "fork cybersource-rest-client",
+  "author": "OEN-Tech",
   "license": "CyberSource",
   "main": "src/index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/OEN-Tech/cybersource-rest-client.git"
+  },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --recursive"
   },

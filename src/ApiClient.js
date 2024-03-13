@@ -15,7 +15,7 @@
 
 'use strict';
 
-(function(root, factory) {
+(function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['axios', 'axios-cookiejar-support', 'https-proxy-agent', 'https', 'querystring', 'Authentication/MerchantConfig', 'Authentication/Logger', 'Authentication/Constants', 'Authentication/Authorization', 'Authentication/PayloadDigest'], factory);
@@ -29,7 +29,7 @@
     }
     root.CyberSource.ApiClient = factory(root.axios, root.axiosCookieJar, root.httpsProxyAgent, root.https, root.querystring, root.Authentication.MerchantConfig, root.Authentication.Logger, root.Authentication.Constants, root.Authentication.Authorization, root.Authentication.PayloadDigest);
   }
-}(this, function(axios, axiosCookieJar, { HttpsProxyAgent }, https, querystring, MerchantConfig, Logger, Constants, Authorization, PayloadDigest) {
+}(this, function (axios, axiosCookieJar, { HttpsProxyAgent }, https, querystring, MerchantConfig, Logger, Constants, Authorization, PayloadDigest) {
   /**
    * @module ApiClient
    * @version 0.0.1
@@ -42,7 +42,7 @@
    * @alias module:ApiClient
    * @class
    */
-  var exports = function() {
+  var exports = function () {
     /**
      * The base URL against which to resolve every API call's (relative) path.
      * @type {String}
@@ -112,7 +112,7 @@
    * @param param The actual parameter.
    * @returns {String} The string representation of <code>param</code>.
    */
-  exports.prototype.paramToString = function(param) {
+  exports.prototype.paramToString = function (param) {
     if (param == undefined || param == null) {
       return '';
     }
@@ -129,13 +129,13 @@
    * @param {Object} pathParams The parameter values to append.
    * @returns {String} The encoded path with parameter values substituted.
    */
-  exports.prototype.buildUrl = function(path, pathParams) {
+  exports.prototype.buildUrl = function (path, pathParams) {
     if (!path.match(/^\//)) {
       path = '/' + path;
     }
     var url = path;
     var _this = this;
-    url = url.replace(/\{([\w-]+)\}/g, function(fullMatch, key) {
+    url = url.replace(/\{([\w-]+)\}/g, function (fullMatch, key) {
       var value;
       if (pathParams.hasOwnProperty(key)) {
         value = _this.paramToString(pathParams[key]);
@@ -158,7 +158,7 @@
    * @param {String} contentType The MIME content type to check.
    * @returns {Boolean} <code>true</code> if <code>contentType</code> represents JSON, otherwise <code>false</code>.
    */
-  exports.prototype.isJsonMime = function(contentType) {
+  exports.prototype.isJsonMime = function (contentType) {
     return Boolean(contentType != null && contentType.match(/^application\/json(;.*)?$/i));
   };
 
@@ -167,7 +167,7 @@
    * @param {Array.<String>} contentTypes
    * @returns {String} The chosen content type, preferring JSON.
    */
-  exports.prototype.jsonPreferredMime = function(contentTypes) {
+  exports.prototype.jsonPreferredMime = function (contentTypes) {
     for (var i = 0; i < contentTypes.length; i++) {
       if (this.isJsonMime(contentTypes[i])) {
         return contentTypes[i];
@@ -181,13 +181,13 @@
    * @param param The parameter to check.
    * @returns {Boolean} <code>true</code> if <code>param</code> represents a file.
    */
-  exports.prototype.isFileParam = function(param) {
+  exports.prototype.isFileParam = function (param) {
     // fs.ReadStream in Node.js and Electron (but not in runtime like browserify)
     if (typeof require === 'function') {
       var fs;
       try {
         fs = require('fs');
-      } catch (err) {}
+      } catch (err) { }
       if (fs && fs.ReadStream && param instanceof fs.ReadStream) {
         return true;
       }
@@ -217,7 +217,7 @@
    * @param {Object.<String, Object>} params The parameters as object properties.
    * @returns {Object.<String, Object>} normalized parameters.
    */
-  exports.prototype.normalizeParams = function(params) {
+  exports.prototype.normalizeParams = function (params) {
     var newParams = {};
     for (var key in params) {
       if (params.hasOwnProperty(key) && params[key] != undefined && params[key] != null) {
@@ -298,9 +298,9 @@
    * @param {Object} axiosConfig The object to be used as configuration for <code>axios</code> API.
    * @param {Array.<String>} authNames An array of authentication method names.
    */
-  exports.prototype.applyAuthToRequest = function(axiosConfig, authNames) {
+  exports.prototype.applyAuthToRequest = function (axiosConfig, authNames) {
     var _this = this;
-    authNames.forEach(function(authName) {
+    authNames.forEach(function (authName) {
       var auth = _this.authentications[authName];
       switch (auth.type) {
         case 'basic':
@@ -395,10 +395,10 @@
 
     try {
       // 404 is caused by missing resource / resource not found
-      if (error.response.config.responseType != 'stream'){
+      if (error.response.config.responseType != 'stream') {
         tester.response.text = JSON.stringify(error.response.data);
       } else { throw "Exception during streaming"; }
-    } catch(err) {
+    } catch (err) {
       // 404 is caused by unexpected end of stream or stream not found
       tester.response.text = error.message;
     }
@@ -438,7 +438,7 @@
     return tester;
   }
 
-    // Code added by Infosys dev team
+  // Code added by Infosys dev team
 
   /**
    * This method will set the merchantConfig object global
@@ -449,10 +449,10 @@
 
     this.merchantConfig = new MerchantConfig(configObject);
     this.constants = Constants;
-    if(this.merchantConfig.getIntermediateHost()) {
-      if(this.merchantConfig.getIntermediateHost().startsWith(this.constants.HTTP_URL_PREFIX) ||
+    if (this.merchantConfig.getIntermediateHost()) {
+      if (this.merchantConfig.getIntermediateHost().startsWith(this.constants.HTTP_URL_PREFIX) ||
         this.merchantConfig.getIntermediateHost().startsWith('http://')) {
-          this.basePath = this.merchantConfig.getIntermediateHost();
+        this.basePath = this.merchantConfig.getIntermediateHost();
       } else {
         this.basePath = this.constants.HTTP_URL_PREFIX + this.merchantConfig.getIntermediateHost();
       }
@@ -485,7 +485,7 @@
     // headerParams['v-c-client-id'] = clientId;
 
     // if (this.merchantConfig.getSolutionId() != null && this.merchantConfig.getSolutionId() != '') {
-      // headerParams['v-c-solution-id'] = this.merchantConfig.getSolutionId();
+    // headerParams['v-c-solution-id'] = this.merchantConfig.getSolutionId();
     // }
 
     if (this.merchantConfig.getAuthenticationType().toLowerCase() === this.constants.JWT) {
@@ -558,8 +558,8 @@
    * @returns {Object} The SuperAgent request object.
    */
   exports.prototype.callApi = function callApi(path, httpMethod, pathParams,
-      queryParams, headerParams, formParams, bodyParam, authNames, contentTypes, accepts,
-      returnType, callback) {
+    queryParams, headerParams, formParams, bodyParam, authNames, contentTypes, accepts,
+    returnType, callback) {
 
     var _this = this;
     var url = this.buildUrl(path, pathParams);
@@ -581,11 +581,11 @@
     };
 
     if (useProxy && (proxyAddress != null && proxyAddress != '')) {
-      if ((proxyUser != null && proxyUser != '') && (proxyPassword!= null && proxyPassword != '')) {
-        var proxy  = process.env.http_proxy || 'http://' + proxyUser + ':' + proxyPassword + '@' + proxyAddress + ':' + proxyPort;
+      if ((proxyUser != null && proxyUser != '') && (proxyPassword != null && proxyPassword != '')) {
+        var proxy = process.env.http_proxy || 'http://' + proxyUser + ':' + proxyPassword + '@' + proxyAddress + ':' + proxyPort;
       }
       else {
-        var proxy  = process.env.http_proxy || 'http://' +  proxyAddress + ':' + proxyPort;
+        var proxy = process.env.http_proxy || 'http://' + proxyAddress + ':' + proxyPort;
       }
 
       const agent = new HttpsProxyAgent(proxy);
@@ -595,7 +595,7 @@
     var fslib = require('fs');
     var pathlib = require('path');
 
-    if(enableClientCert) {
+    if (enableClientCert) {
       var certFile = pathlib.resolve(pathlib.join(this.merchantConfig.getClientCertDir(), this.merchantConfig.getSSLClientCert()));
       var keyFile = pathlib.resolve(pathlib.join(this.merchantConfig.getClientCertDir(), this.merchantConfig.getPrivateKey()));
 
@@ -615,7 +615,7 @@
 
     // set query parameters
     if (httpMethod.toLowerCase() === this.constants.GET && this.cache === false) {
-        queryParams['_'] = new Date().getTime();
+      queryParams['_'] = new Date().getTime();
     }
 
     /**
@@ -631,12 +631,11 @@
       }
     }
 
-    if (this.merchantConfig.getAuthenticationType().toLowerCase() !== this.constants.MUTUAL_AUTH)
-    {
+    if (this.merchantConfig.getAuthenticationType().toLowerCase() !== this.constants.MUTUAL_AUTH) {
       headerParams = this.callAuthenticationHeader(httpMethod, requestTarget, bodyParam, headerParams);
     }
 
-    if(this.merchantConfig.getDefaultHeaders()) {
+    if (this.merchantConfig.getDefaultHeaders()) {
       for (const [key, value] of Object.entries(this.merchantConfig.getDefaultHeaders())) {
         headerParams[`${key}`] = `${value}`;
       }
@@ -658,7 +657,7 @@
     var contentTypeHeaderValue = '';
     if (contentType) {
       // Issue with superagent and multipart/form-data (https://github.com/visionmedia/superagent/issues/746)
-      if(contentType != 'multipart/form-data') {
+      if (contentType != 'multipart/form-data') {
         contentTypeHeaderValue = contentType;
       }
     } else if (!contentTypeHeaderValue) {
@@ -706,7 +705,7 @@
         axiosConfig.responseType = 'stream';
         axiosConfig.url = requestTarget;
         axiosConfig.cancelToken = source.token;
-        axios.request(axiosConfig).then(function(response) {
+        axios.request(axiosConfig).then(function (response) {
           response.data.pipe(stream);
         });
       }
@@ -719,21 +718,21 @@
     }
 
     // Attach previously saved cookies, if enabled
-    if (this.enableCookies){
+    if (this.enableCookies) {
       axiosConfig.jar = this.cookieJar;
     }
 
     axiosConfig.url = requestTarget;
 
 
-    axios.request(axiosConfig).then(function(response) {
+    axios.request(axiosConfig).then(function (response) {
       if (callback) {
         var data = _this.deserialize(response, returnType);
         response = _this.translateResponse(response);
 
         callback(null, data, response);
       }
-    }).catch(function(error, response) {
+    }).catch(function (error, response) {
       source.cancel('Stream ended.');
       var userError = {};
       if (error.code && error.code == "ECONNREFUSED") {
@@ -749,10 +748,6 @@
       }
 
       callback(userError, null, response);
-    });
-
-    process.on('uncaughtException', (reason, p) => {
-      // console.log('Uncaught exception at Promise :' + p + ' with Reason : ' + reason);
     });
   };
 
@@ -800,7 +795,7 @@
    * @param {String} str The date value as a string.
    * @returns {Date} The parsed date object.
    */
-  exports.parseDate = function(str) {
+  exports.parseDate = function (str) {
     return new Date(str.replace(/T/i, ' '));
   };
 
@@ -813,7 +808,7 @@
    * all properties on <code>data<code> will be converted to this type.
    * @returns An instance of the specified type or null or undefined if data is null or undefined.
    */
-  exports.convertToType = function(data, type) {
+  exports.convertToType = function (data, type) {
     if (data === null || data === undefined)
       return data
 
@@ -829,7 +824,7 @@
       case 'Date':
         return this.parseDate(String(data));
       case 'Blob':
-          return data;
+        return data;
       default:
         if (type === Object) {
           // generic object, return directly
@@ -840,7 +835,7 @@
         } else if (Array.isArray(type)) {
           // for array type like: ['String']
           var itemType = type[0];
-          return data.map(function(item) {
+          return data.map(function (item) {
             return exports.convertToType(item, itemType);
           });
         } else if (typeof type === 'object') {
@@ -874,7 +869,7 @@
    * @param data {Object|Array} The REST data.
    * @param obj {Object|Array} The target object or array.
    */
-  exports.constructFromObject = function(data, obj, itemType) {
+  exports.constructFromObject = function (data, obj, itemType) {
     if (Array.isArray(data)) {
       for (var i = 0; i < data.length; i++) {
         if (data.hasOwnProperty(i))
